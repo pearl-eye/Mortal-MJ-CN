@@ -1,0 +1,115 @@
+name: Validate and release binary package
+
+on:
+  push:
+    branches: [zh-CN]
+    tags: ['cn-v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (blank uses cn-v plus the DLL version)'
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mortal-package-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.package.outputs.version }}
+      tag: ${{ steps.package.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate metadata and package the four release files
+        id: package
+        shell: pwsh
+        env:
+          REQUESTED_TAG: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || inputs.tag || '' }}
+        run: |
+          $result = & ./scripts/Package.ps1 -Repository $env:GITHUB_REPOSITORY -ReleaseTag $env:REQUESTED_TAG
+          "version=$($result.Version)" >> $env:GITHUB_OUTPUT
+          "tag=$($result.ReleaseTag)" >> $env:GITHUB_OUTPUT
+      - name: Upload validated package
+        uses: actions/upload-artifact@v4
+        with:
+          name: MortalMJPlugin-${{ steps.package.outputs.version }}
+          if-no-files-found: error
+          path: |
+            artifacts/latest.zip
+            artifacts/repo.json
+            artifacts/SHA256SUMS
+
+  publish:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/cn-v')
+    needs: package
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: MortalMJPlugin-${{ needs.package.outputs.version }}
+          path: artifacts
+      - name: Refuse an existing release or a tag for another commit
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ needs.package.outputs.tag }}
+          TARGET_SHA: ${{ github.sha }}
+        run: |
+          $headers = @{
+            Authorization = "Bearer $env:GH_TOKEN"
+            Accept = 'application/vnd.github+json'
+            'X-GitHub-Api-Version' = '2022-11-28'
+          }
+          $base = "$env:GITHUB_API_URL/repos/$env:GH_REPO"
+          function Get-OrMissing([string]$url) {
+            try {
+              return Invoke-RestMethod -Uri $url -Headers $headers
+            } catch [Microsoft.PowerShell.Commands.HttpResponseException] {
+              if ($_.Exception.Response.StatusCode -eq [System.Net.HttpStatusCode]::NotFound) {
+                return $null
+              }
+              throw
+            }
+          }
+          $existingRelease = Get-OrMissing "$base/releases/tags/$env:RELEASE_TAG"
+          if ($null -ne $existingRelease) {
+            throw "Release already exists; refusing to replace it: $env:RELEASE_TAG"
+          }
+          $existingTag = Get-OrMissing "$base/git/ref/tags/$env:RELEASE_TAG"
+          if ($null -ne $existingTag) {
+            $object = $existingTag.object
+            while ($object.type -eq 'tag') {
+              $annotatedTag = Invoke-RestMethod -Uri "$base/git/tags/$($object.sha)" -Headers $headers
+              $object = $annotatedTag.object
+            }
+            if ($object.type -ne 'commit' -or $object.sha -cne $env:TARGET_SHA) {
+              throw 'The existing release tag points to a different commit.'
+            }
+          }
+      - name: Create a new release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ needs.package.outputs.tag }}
+          RELEASE_VERSION: ${{ needs.package.outputs.version }}
+          TARGET_SHA: ${{ github.sha }}
+        run: |
+          gh release create "$RELEASE_TAG" \
+            --repo "$GH_REPO" \
+            --target "$TARGET_SHA" \
+            --title "Mortal MJ CN $RELEASE_VERSION" \
+            --notes '国服 Emj/EmjL 适配版本。安装说明见仓库 README，文件校验值见 SHA256SUMS。Mortal 环境需另行配置。' \
+            artifacts/latest.zip artifacts/repo.json artifacts/SHA256SUMS

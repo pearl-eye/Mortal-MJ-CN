@@ -34,3 +34,12 @@ _dailyroutines_src/
 _dailyroutines_official/
 _cfsrc/
 match_server.py
+
+# Local build outputs and private runtime data
+artifacts/
+*.pdb
+original-*/
+validation/
+configuration.json
+mortal_env/
+*.log

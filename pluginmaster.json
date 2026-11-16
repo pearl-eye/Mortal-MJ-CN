@@ -1,26 +1,30 @@
 [
   {
-    "Author": "ChanceRain, NiGuangOwO, QianChangUwU",
-    "Name": "Mortal MJ",
+    "Author": "ChanceRain, NiGuangOwO, QianChangUwU；国服修复维护：pearl-eye",
+    "Name": "Mortal MJ CN",
     "InternalName": "MortalMJPlugin",
-    "AssemblyVersion": "1.0.0.29",
-    "Description": "FFXIV 国服「多玛方城战」麻将 AI 辅助插件，基于 Mortal AI 提供实时打牌建议与自动化（自动出牌/吃碰杠荣和/自动点下一局/看整桌/打牌随机化/手打高亮建议牌）。需要额外配置 Mortal AI 环境，详见仓库 README。",
+    "AssemblyVersion": "1.0.0.30",
+    "Punchline": "Mortal AI 多玛方城战辅助，支持国服 Emj/EmjL 界面。",
+    "Description": "Mortal MJ 国服修复版，保留本地 Emj/EmjL 适配、原生牌局读取和 Mortal AI 建议。AI 环境通过插件环境引导单独下载。原有联机与白名单功能保持原授权机制；插件进入角色后会向原服务发送角色名、原始服务器名与 ContentID。",
     "ApplicableVersion": "any",
+    "RepoUrl": "https://github.com/pearl-eye/Mortal-MJ-CN",
     "Tags": [
       "mahjong",
       "mortal",
-      "ai"
+      "ai",
+      "国服"
     ],
     "DalamudApiLevel": 15,
-    "Punchline": "Mortal AI 自动打麻将",
-    "RepoUrl": "https://github.com/ChanceRain0108/DalamudPlugins",
-    "IconUrl": "https://raw.githubusercontent.com/ChanceRain0108/DalamudPlugins/main/icon.png",
-    "DownloadLinkInstall": "https://github.com/ChanceRain0108/DalamudPlugins/releases/latest/download/latest.zip",
-    "DownloadLinkUpdate": "https://github.com/ChanceRain0108/DalamudPlugins/releases/latest/download/latest.zip",
-    "DownloadLinkTesting": "https://github.com/ChanceRain0108/DalamudPlugins/releases/latest/download/latest.zip",
-    "IsHide": false,
-    "IsTestingExclusive": false,
+    "LoadRequiredState": 0,
+    "LoadSync": false,
+    "CanUnloadAsync": false,
+    "LoadPriority": 0,
+    "IconUrl": "https://raw.githubusercontent.com/pearl-eye/Mortal-MJ-CN/cn-v1.0.0.30/icon.png",
+    "AcceptsFeedback": true,
+    "DownloadLinkInstall": "https://github.com/pearl-eye/Mortal-MJ-CN/releases/download/cn-v1.0.0.30/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/pearl-eye/Mortal-MJ-CN/releases/download/cn-v1.0.0.30/latest.zip",
+    "DownloadLinkTesting": "https://github.com/pearl-eye/Mortal-MJ-CN/releases/download/cn-v1.0.0.30/latest.zip",
     "DownloadCount": 0,
-    "LastUpdate": 1789913135
+    "LastUpdate": 1794811846
   }
 ]

@@ -1,17 +1,23 @@
 {
-  "Author": "ChanceRain, NiGuangOwO, QianChangUwU",
-  "Name": "Mortal MJ Plugin",
+  "Author": "ChanceRain, NiGuangOwO, QianChangUwU；国服修复维护：pearl-eye",
+  "Name": "Mortal MJ CN",
   "InternalName": "MortalMJPlugin",
-  "AssemblyVersion": "1.0.0.22",
-  "Description": "用 Mortal AI 打多玛方城战",
+  "AssemblyVersion": "1.0.0.30",
+  "Punchline": "Mortal AI 多玛方城战辅助，支持国服 Emj/EmjL 界面。",
+  "Description": "Mortal MJ 国服修复版，保留本地 Emj/EmjL 适配、原生牌局读取和 Mortal AI 建议。AI 环境通过插件环境引导单独下载。原有联机与白名单功能保持原授权机制；插件进入角色后会向原服务发送角色名、原始服务器名与 ContentID。",
   "ApplicableVersion": "any",
-  "RepoUrl": "",
-  "Tags": ["mahjong", "mortal", "ai"],
+  "RepoUrl": "https://github.com/pearl-eye/Mortal-MJ-CN",
+  "Tags": [
+    "mahjong",
+    "mortal",
+    "ai",
+    "国服"
+  ],
   "DalamudApiLevel": 15,
   "LoadRequiredState": 0,
   "LoadSync": false,
   "CanUnloadAsync": false,
   "LoadPriority": 0,
-  "Punchline": "Mortal AI 自动打麻将",
-  "AcceptsFeedback": false
+  "IconUrl": "https://raw.githubusercontent.com/pearl-eye/Mortal-MJ-CN/zh-CN/icon.png",
+  "AcceptsFeedback": true
 }
