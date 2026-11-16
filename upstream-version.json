@@ -1,0 +1,12 @@
+{
+  "InternalName": "MortalMJPlugin",
+  "AssemblyVersion": "1.0.0.29",
+  "DalamudApiLevel": 15,
+  "UpstreamRepository": "ChanceRain0108/DalamudPlugins",
+  "UpstreamCommit": "57be3ad68fdb0a00877cc106bada1a6686028b44",
+  "UpstreamManifestPath": "pluginmaster.json",
+  "UpstreamManifestBlobSha": "2df2ad66a36fb89f983d393b71104ba1534dc5a2",
+  "OriginalAssemblySha256": "6d1983cf66f486ab1c0ec9d734a4fb3e04c50424334b4c5c1f7d695313606ec3",
+  "VerifiedAt": "2026-11-16",
+  "VersionPolicy": "修复版必须与上游基础版本完全一致，不单独增加主版本、次版本、修订号或内部版本号。仅在确认上游发布新版本后更新此依据。"
+}

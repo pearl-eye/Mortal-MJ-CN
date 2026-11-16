@@ -2,9 +2,11 @@
 
 ## 简介
 
-Mortal MJ 的国服兼容维护版本，当前版本为 **1.0.0.30**。基于 [ChanceRain0108/DalamudPlugins](https://github.com/ChanceRain0108/DalamudPlugins) 的公开编译发布版本，由 pearl-eye 维护 `Emj` / `EmjL` 麻将界面的兼容修复。
+Mortal MJ 的国服兼容维护版本，当前基础版本为 **1.0.0.29**，与原版一致。基于 [ChanceRain0108/DalamudPlugins](https://github.com/ChanceRain0108/DalamudPlugins) 的公开编译发布版本，由 pearl-eye 维护 `Emj` / `EmjL` 麻将界面的兼容修复。
 
 插件使用 Mortal AI 为多玛方城战提供建议及自动操作。本仓库提供编译版和使用说明。
+
+修复版的程序集、文件、清单和依赖描述版本均跟随原版，不额外增加小版本号。版本依据见 [upstream-version.json](upstream-version.json)，对应[上游发布提交](https://github.com/ChanceRain0108/DalamudPlugins/commit/57be3ad68fdb0a00877cc106bada1a6686028b44)。打包脚本会拒绝与该依据不一致的版本。兼容修复通过 Git 提交和 Release 说明记录。
 
 ## 安装方式
 
@@ -15,6 +17,8 @@ https://raw.githubusercontent.com/pearl-eye/Dalamud-Plugins-CN/main/repo.json
 ```
 
 保存后打开插件安装器，搜索 **Mortal MJ CN** 并自行安装。若已安装其他来源的 Mortal MJ，请先禁用旧实例并备份配置，不要同时加载同一插件的多个实例。
+
+早期误标为 `1.0.0.30` 的修复版保留在历史发布中。卫月不会自动降级；已安装该版本时，请先禁用并卸载旧实例，再从上述仓库重新安装 `1.0.0.29`。普通卸载保留配置，勿选择“重置数据”。
 
 使用 `/mjui` 打开设置，`/mjauto` 切换自动出牌，`/mjsetup` 打开环境引导。Mortal 环境沿用原插件入口按需下载，约 300 MB；本插件安装包不包含模型。
 

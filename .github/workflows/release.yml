@@ -110,6 +110,7 @@ jobs:
           gh release create "$RELEASE_TAG" \
             --repo "$GH_REPO" \
             --target "$TARGET_SHA" \
+            --latest \
             --title "Mortal MJ CN $RELEASE_VERSION" \
             --notes '国服 Emj/EmjL 适配版本。安装说明见仓库 README，文件校验值见 SHA256SUMS。Mortal 环境需另行配置。' \
             artifacts/latest.zip artifacts/repo.json artifacts/SHA256SUMS

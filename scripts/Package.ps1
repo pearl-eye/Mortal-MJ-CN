@@ -16,6 +16,22 @@ $packageDirectory = Join-Path $artifacts $pluginName
 $files = @('MortalMJPlugin.dll', 'MortalMJPlugin.json', 'MortalMJPlugin.deps.json', 'icon.png')
 $utf8 = [System.Text.UTF8Encoding]::new($false)
 
+$upstreamPath = Join-Path $repoRoot 'upstream-version.json'
+if (-not [System.IO.File]::Exists($upstreamPath)) {
+    throw 'The upstream version evidence file is required.'
+}
+$upstream = Get-Content -LiteralPath $upstreamPath -Raw | ConvertFrom-Json -AsHashtable
+if ($upstream['InternalName'] -cne $pluginName -or $upstream['DalamudApiLevel'] -ne 15) {
+    throw 'Upstream version evidence must identify MortalMJPlugin for Dalamud API 15.'
+}
+$upstreamVersion = [string]$upstream['AssemblyVersion']
+if ($upstreamVersion -notmatch '^\d+\.\d+\.\d+\.\d+$' -or
+    [string]$upstream['UpstreamCommit'] -notmatch '^[0-9a-f]{40}$' -or
+    [string]$upstream['UpstreamManifestBlobSha'] -notmatch '^[0-9a-f]{40}$' -or
+    [string]$upstream['OriginalAssemblySha256'] -notmatch '^[0-9a-f]{64}$') {
+    throw 'Upstream version evidence is incomplete or invalid.'
+}
+
 foreach ($name in $files) {
     $path = Join-Path $repoRoot $name
     if (-not [System.IO.File]::Exists($path)) {
@@ -57,8 +73,15 @@ if ($assembly.Name -cne $pluginName) {
     throw "Unexpected assembly name: $($assembly.Name)"
 }
 $version = $assembly.Version.ToString()
+if ($version -cne $upstreamVersion) {
+    throw "The DLL version must equal the verified upstream version: $upstreamVersion. Do not increment a repair release."
+}
 if ([string]$manifest['AssemblyVersion'] -cne $version) {
     throw "Manifest AssemblyVersion must match the DLL: $version"
+}
+$fileVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($assemblyPath)
+if ($fileVersion.FileVersion -cne $upstreamVersion -or $fileVersion.ProductVersion -cne $upstreamVersion) {
+    throw "FileVersion and InformationalVersion must also equal the upstream version: $upstreamVersion"
 }
 
 $assemblyStream = [System.IO.File]::OpenRead($assemblyPath)
